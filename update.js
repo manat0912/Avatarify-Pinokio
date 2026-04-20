@@ -10,5 +10,18 @@ module.exports = {
       path: "app",
       message: "git pull"
     }
+  }, {
+    method: "shell.run",
+    params: {
+      path: "app/fomm",
+      message: "git pull"
+    }
+  }, {
+    method: "shell.run",
+    params: {
+      venv: "env",
+      path: "app",
+      message: "uv pip install -r requirements.txt"
+    }
   }]
 }

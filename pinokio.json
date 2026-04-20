@@ -2,6 +2,15 @@
   "title": "avatarify",
   "description": "",
   "icon": "icon.png",
-  "links": [],
+  "links": [
+    {
+      "title": "github",
+      "value": "https://github.com/alievk"
+    },
+    {
+      "title": "website",
+      "value": "https://github.com/alievk/avatarify-python"
+    }
+  ],
   "posts": []
 }
