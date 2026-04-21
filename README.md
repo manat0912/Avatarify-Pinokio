@@ -45,7 +45,8 @@ To use Avatarify as your webcam in meeting software, you need to route the video
 3. In OBS, go to the **Sources** box at the bottom, click the **"+" (Add)** button, and select **Window Capture**. Click OK.
 4. In the window that pops up, change the **Window** drop-down menu to `[python.exe]: avatarify` and click OK.
 5. In the top OBS menu, click **Edit -> Transform -> Fit to screen** so the avatar fills the preview area.
-6. **Tip for performance:** To reduce video latency, right-click on the main preview window in OBS and uncheck **Enable Preview**.
+6. too get OBS too work as a virtual camera using avatarify you need to download and install 2 plugins for OBS 1.Droidcam.OBSVirtualOut.Plugin.0.2.2. 2.Droidcam.Drivers7.1.2.
+7.  **Tip for performance:** To reduce video latency, right-click on the main preview window in OBS and uncheck **Enable Preview**.
 
 ### 3. Start the Virtual Camera
 1. In OBS Studio, click on **Tools** in the top menu bar, then select **VirtualCam**.
