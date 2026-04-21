@@ -12,14 +12,16 @@ Avatarify is a real-time photorealistic avatar creator. It uses a First Order Mo
 1. **Install**: Click the "Install" button to download the repository, first-order-model, and weights.
 2. **Start**: Click the "Start" button to launch the application.
 3. **Calibrate**: Once the window opens, align your face with the rectangle and press 'X' to calibrate.
-4. **Control**:
-   - `1-9`: Change avatar.
-   - `A`/`D`: Previous/Next avatar.
-   - `Q`: Get a random avatar.
+4. **Change Faces (Avatars)**: 
+   - **Important:** Make sure you click on the "Avatarify" or "Cam" window first so it has keyboard focus!
+   - `A` / `D`: Switch to the Previous / Next face.
+   - `1` - `9`: Jump directly to a specific face.
+   - `Q`: Load a random StyleGAN face.
+5. **Other Controls**:
    - `L`: Reload avatars (useful if you added a new image while the app is running).
-   - `W`/`S`: Zoom camera in/out.
-   - `X`: Calibrate face pose.
-   - `I`: Toggle FPS display.
+   - `W` / `S`: Zoom camera in/out.
+   - `X`: Recalibrate face pose.
+   - `0`: Toggle passthrough (show your real face).
    - `ESC`: Quit.
 
 ### Adding Custom Avatars
