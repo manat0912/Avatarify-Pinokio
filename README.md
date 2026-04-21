@@ -31,6 +31,29 @@ You can easily add your own face or any other image to the application:
 3. **Tip for best results:** Crop the image so it's a square and the face takes up most of the frame (similar to the default images).
 4. If the app is already running, just press **`L`** in the camera window to reload the folder, then use **`A`** or **`D`** to find your new image. Don't forget to press **`X`** to recalibrate your pose to match the new face!
 
+## Using Avatarify in Video Calls (Zoom, Skype, Teams, etc.)
+
+To use Avatarify as your webcam in meeting software, you need to route the video output through OBS Studio's Virtual Camera.
+
+### 1. Initial Setup (Do this once)
+1. Download and install **[OBS Studio](https://obsproject.com/)**.
+2. Download and install the **[VirtualCam plugin for OBS](https://obsproject.com/forum/resources/obs-virtualcam.539/)**. During installation, choose `Install and register only 1 virtual camera`.
+
+### 2. Connect Avatarify to OBS
+1. Start Avatarify through Pinokio. Wait until the two windows ("cam" and "avatarify") appear. 
+2. Open **OBS Studio**.
+3. In OBS, go to the **Sources** box at the bottom, click the **"+" (Add)** button, and select **Window Capture**. Click OK.
+4. In the window that pops up, change the **Window** drop-down menu to `[python.exe]: avatarify` and click OK.
+5. In the top OBS menu, click **Edit -> Transform -> Fit to screen** so the avatar fills the preview area.
+6. **Tip for performance:** To reduce video latency, right-click on the main preview window in OBS and uncheck **Enable Preview**.
+
+### 3. Start the Virtual Camera
+1. In OBS Studio, click on **Tools** in the top menu bar, then select **VirtualCam**.
+2. Check the box for **AutoStart**, set **Buffered Frames to 0**, and press **Start**. (You can now leave OBS running in the background).
+
+### 4. Select the Camera in Your Video Call App
+Open your video conferencing software (Zoom, Skype, Teams, Discord, etc.) and go to its Video Settings. Change your Camera to **`OBS-Camera`** (instead of your physical webcam).
+
 ## API Documentation
 
 ### Programmatic Access
