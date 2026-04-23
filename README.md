@@ -8,10 +8,15 @@ Avatarify is a real-time photorealistic avatar creator. It uses a First Order Mo
 - Support for custom avatars (add images to the `avatars` folder).
 - High-performance GPU acceleration with PyTorch.
 - **Improved head movement stability**: Reduced distortion during left/right head turns for a more natural look.
+- **Two Animation Engines**: 
+  - **FOMM (First Order Motion Model):** The classic, ultra-fast animation mode.
+  - **Face Animation (face-vid2vid):** A new mode integrated directly into the app that uses `OcclusionAwareSPADEGenerator`. It produces significantly better facial motions, lip-syncing, and expression tracking, while carefully keeping VRAM usage constrained (under 8GB).
 
 ## How to use
-1. **Install**: Click the "Install" button to download the repository, first-order-model, and weights.
-2. **Start**: Click the "Start" button to launch the application.
+1. **Install**: Click the "Install" button to download the repository, models, and weights.
+2. **Start**: Click the "Start" button to launch the application. You can choose:
+   - **Start Avatarify (FOMM):** To launch the standard lightweight engine.
+   - **Start Face Animation (face-vid2vid):** To launch the new high-quality engine.
 3. **Calibrate**: Once the window opens, align your face with the rectangle and press 'X' to calibrate.
 4. **Change Faces (Avatars)**: 
    - **Important:** Make sure you click on the "Avatarify" or "Cam" window first so it has keyboard focus!

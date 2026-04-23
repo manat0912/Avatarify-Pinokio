@@ -1,0 +1,14 @@
+opencv-python
+face-alignment==1.3.3
+pyzmq
+msgpack-numpy==0.4.7.1
+pyyaml
+requests==2.32.0
+pyfakewebcam==0.1.0
+scipy
+scikit-image
+numba
+tqdm
+Pillow
+imageio
+gdown

@@ -10,6 +10,14 @@ module.exports = {
         ]
       }
     },
+    // Copy customized scripts
+    {
+      method: "fs.copy",
+      params: {
+        src: "patch",
+        dest: "app"
+      }
+    },
     // FOMM
     {
       when: "{{!exists('app/fomm')}}",
