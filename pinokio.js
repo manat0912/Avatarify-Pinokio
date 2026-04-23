@@ -1,6 +1,6 @@
 const path = require('path')
 module.exports = {
-  version: "5.0",
+  version: "6.0",
   menu: async (kernel, info) => {
     let installed = info.exists("app/env")
     let running = {
@@ -64,8 +64,15 @@ module.exports = {
         return [{
           default: true,
           icon: "fa-solid fa-power-off",
-          text: "Start",
+          text: "Start Avatarify (FOMM)",
           href: "start.js",
+        }, {
+          icon: "fa-solid fa-power-off",
+          text: "Start Face Animation (face-vid2vid)",
+          href: "start.js",
+          params: {
+            mode: "face-animation"
+          }
         }, {
           icon: "fa-solid fa-plug",
           text: "Update",
@@ -83,7 +90,6 @@ module.exports = {
           text: "<div><strong>Reset</strong><div>Revert to pre-install state</div></div>",
           href: "reset.js",
           confirm: "Are you sure you wish to reset the app?"
-
         }]
       }
     } else {

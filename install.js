@@ -1,6 +1,6 @@
 module.exports = {
   run: [
-    // Edit this step to customize the git repository to use
+    // Clone avatarify-python
     {
       when: "{{!exists('app')}}",
       method: "shell.run",
@@ -30,29 +30,79 @@ module.exports = {
         dir: "app"
       }
     },
-    // Edit this step with your custom install commands
+    // Clone Face_Animation_Real_Time for better live animations
+    {
+      when: "{{!exists('app/face-animation')}}",
+      method: "shell.run",
+      params: {
+        path: "app",
+        message: [
+          "git clone https://github.com/sky24h/Face_Animation_Real_Time.git face-animation"
+        ]
+      }
+    },
+    // Fix Python import resolution by creating __init__.py
+    {
+      when: "{{!exists('app/face-animation/face-vid2vid/modules/__init__.py')}}",
+      method: "fs.write",
+      params: {
+        path: "app/face-animation/face-vid2vid/modules/__init__.py",
+        text: ""
+      }
+    },
+    // Install gdown for weights download
     {
       method: "shell.run",
       params: {
-        venv: "env",                // Edit this to customize the venv folder path
-        path: "app",                // Edit this to customize the path to start the shell from
+        venv: "env",
+        path: "app",
+        message: [
+          "uv pip install gdown"
+        ]
+      }
+    },
+    // FaceMapping Weights
+    {
+      when: "{{!exists('app/FaceMapping.pth.tar')}}",
+      method: "shell.run",
+      params: {
+        venv: "env",
+        path: "app",
+        message: [
+          "gdown 11ZgyjKI5OcB7klcsIdPpCCX38AIX8Soc -O FaceMapping.pth.tar"
+        ]
+      }
+    },
+    // Install avatarify requirements
+    {
+      method: "shell.run",
+      params: {
+        venv: "env",
+        path: "app",
         message: [
           "uv pip install -r requirements.txt"
         ]
       }
     },
-    // Delete this step if your project does not use torch
+    // Install Face_Animation_Real_Time requirements
+    {
+      method: "shell.run",
+      params: {
+        venv: "env",
+        path: "app/face-animation",
+        message: [
+          "uv pip install batch-face gdown imageio[ffmpeg]"
+        ]
+      }
+    },
+    // Install torch
     {
       method: "script.start",
       params: {
         uri: "torch.js",
         params: {
-          venv: "env",                // Edit this to customize the venv folder path
-          path: "app",                // Edit this to customize the path to start the shell from
-          // flashattention: true   // uncomment this line if your project requires flashattention
-          // xformers: true   // uncomment this line if your project requires xformers
-          // triton: true   // uncomment this line if your project requires triton
-          // sageattention: true   // uncomment this line if your project requires sageattention
+          venv: "env",
+          path: "app",
         }
       }
     },

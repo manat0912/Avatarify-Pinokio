@@ -1,15 +1,15 @@
 {
   "title": "avatarify",
-  "description": "",
+  "description": "Real-time face animation with FOMM and face-vid2vid engines",
   "icon": "icon.png",
   "links": [
     {
-      "title": "github",
-      "value": "https://github.com/alievk"
+      "title": "avatarify github",
+      "value": "https://github.com/alievk/avatarify-python"
     },
     {
-      "title": "website",
-      "value": "https://github.com/alievk/avatarify-python"
+      "title": "face-animation github",
+      "value": "https://github.com/sky24h/Face_Animation_Real_Time"
     }
   ],
   "posts": []

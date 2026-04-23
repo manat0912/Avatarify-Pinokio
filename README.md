@@ -7,6 +7,7 @@ Avatarify is a real-time photorealistic avatar creator. It uses a First Order Mo
 - Multiple built-in avatars (Einstein, Eminem, Mona Lisa, etc.).
 - Support for custom avatars (add images to the `avatars` folder).
 - High-performance GPU acceleration with PyTorch.
+- **Improved head movement stability**: Reduced distortion during left/right head turns for a more natural look.
 
 ## How to use
 1. **Install**: Click the "Install" button to download the repository, first-order-model, and weights.
@@ -23,6 +24,11 @@ Avatarify is a real-time photorealistic avatar creator. It uses a First Order Mo
    - `X`: Recalibrate face pose.
    - `0`: Toggle passthrough (show your real face).
    - `ESC`: Quit.
+
+### Advanced Configuration
+If you want to further tune the head movement behavior, you can modify the `start.js` file and add the following flags to the command:
+- `--jacobian_dampening <value>`: Control how much the face distorts during head turns (default is `0.3`). Lower values make the face more stable but less responsive to rotation. Higher values (up to `1.0`) allow more rotation but can cause "shearing" distortion.
+- `--no_relative_jacobian`: Completely disables rotation capture, making the face stay strictly forward-facing (most stable, least natural).
 
 ### Adding Custom Avatars
 You can easily add your own face or any other image to the application:
