@@ -26,8 +26,9 @@ parser.add_argument("--in-addr", type=str, default=None, help="Socket address fo
 parser.add_argument("--out-addr", type=str, default=None, help="Socker address for outcoming messages, like example.com:5558")
 parser.add_argument("--jpg_quality", type=int, default=95, help="Jpeg copression quality for image transmission")
 
-parser.add_argument("--smooth_factor", default=0.75, type=float, help="Base EMA smoothing factor for keypoints (0.0 to 0.99).")
+parser.add_argument("--smooth_factor", default=0.9, type=float, help="Base EMA smoothing factor for keypoints (0.0 to 0.99).")
 parser.add_argument("--jacobian_dampening", default=0.3, type=float, help="Jacobian dampening factor (0.0 to 1.0). Lower values reduce distortion during head turns.")
+parser.add_argument("--jacobian_stabilization", default=1.0, type=float, help="Strength of global rotation regularization (0.0 to 1.0). High values prevent face 'melting' during head turns.")
 parser.add_argument("--no_relative_jacobian", action="store_true", help="Disable relative jacobian to reduce severe shearing/distortion during extreme head turns.")
 
 parser.set_defaults(relative=False)

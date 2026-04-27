@@ -96,11 +96,24 @@ def change_avatar(predictor, new_avatar):
     predictor.set_source_image(avatar)
 
 
+
 def draw_guide(img, rw=0.9, rh=0.9, color=(255, 150, 0), thickness=2):
     h, w = img.shape[:2]
     center = (w // 2, h // 2)
+    # 3D-Depth Simulated Ellipse (Dynamic feel)
     axes = (int(w * rw / 2), int(h * rh / 2))
     cv2.ellipse(img, center, axes, 0, 0, 360, color, thickness)
+    # Add "Safe Zone" corner indicators
+    sz = 20
+    cv2.line(img, (10, 10), (10+sz, 10), color, thickness)
+    cv2.line(img, (10, 10), (10, 10+sz), color, thickness)
+    cv2.line(img, (w-10, 10), (w-10-sz, 10), color, thickness)
+    cv2.line(img, (w-10, 10), (w-10, 10+sz), color, thickness)
+    cv2.line(img, (10, h-10), (10+sz, h-10), color, thickness)
+    cv2.line(img, (10, h-10), (10, h-10-sz), color, thickness)
+    cv2.line(img, (w-10, h-10), (w-10-sz, h-10), color, thickness)
+    cv2.line(img, (w-10, h-10), (w-10, h-10-sz), color, thickness)
+    
     cv2.line(img, (center[0], center[1] - 5), (center[0], center[1] + 5), color, 1)
     cv2.line(img, (center[0] - 5, center[1]), (center[0] + 5, center[1]), color, 1)
 
@@ -121,6 +134,7 @@ def print_help():
         info(f'{key}: {name}')
     info('W: Zoom camera in')
     info('S: Zoom camera out')
+    info('M: Toggle auto-tracking')
     info('A: Previous avatar in folder')
     info('D: Next avatar in folder')
     info('Q: Get random avatar')
@@ -200,7 +214,9 @@ if __name__ == "__main__":
         'enc_downscale': opt.enc_downscale,
         'smooth_factor': opt.smooth_factor,
         'jacobian_dampening': opt.jacobian_dampening,
-        'no_relative_jacobian': opt.no_relative_jacobian
+        'jacobian_stabilization': opt.jacobian_stabilization,
+        'no_relative_jacobian': opt.no_relative_jacobian,
+        'enhance': opt.enhance
     }
     if opt.is_worker:
         from afy import predictor_worker
@@ -268,7 +284,7 @@ if __name__ == "__main__":
     cv2.namedWindow('cam', cv2.WINDOW_GUI_NORMAL)
     cv2.moveWindow('cam', 500, 250)
 
-    frame_proportion = 0.9
+    frame_proportion = 0.95
     frame_offset_x = 0
     frame_offset_y = 0
 
@@ -277,6 +293,7 @@ if __name__ == "__main__":
     output_flip = False
     find_keyframe = False
     is_calibrated = False
+    auto_track = opt.auto_track
 
     show_landmarks = False
 
@@ -308,7 +325,29 @@ if __name__ == "__main__":
             frame = frame[..., ::-1]
             frame_orig = frame.copy()
 
-            frame, (frame_offset_x, frame_offset_y) = crop(frame, p=frame_proportion, offset_x=frame_offset_x, offset_y=frame_offset_y)
+            if auto_track:
+                # Every 2 frames for highly responsive tracking
+                if getattr(predictor, 'frame_count', 0) % 2 == 0:
+                    full_lmk = predictor.get_frame_landmarks(frame_orig)
+                    if full_lmk is not None:
+                        # Center of the face (average of all landmarks)
+                        face_center = full_lmk.mean(axis=0)
+                        target_cx = int(face_center[0])
+                        target_cy = int(face_center[1])
+                        
+                        # Highly responsive transition (20% old, 80% new)
+                        if not hasattr(predictor, 'tracker_center'):
+                            predictor.tracker_center = [target_cx, target_cy]
+                        else:
+                            predictor.tracker_center[0] = 0.2 * predictor.tracker_center[0] + 0.8 * target_cx
+                            predictor.tracker_center[1] = 0.2 * predictor.tracker_center[1] + 0.8 * target_cy
+                
+                if hasattr(predictor, 'tracker_center'):
+                    frame, (curr_offset_x, curr_offset_y) = crop(frame_orig, p=frame_proportion, center=predictor.tracker_center, offset_x=frame_offset_x, offset_y=frame_offset_y)
+                else:
+                    frame, (frame_offset_x, frame_offset_y) = crop(frame_orig, p=frame_proportion, offset_x=frame_offset_x, offset_y=frame_offset_y)
+            else:
+                frame, (frame_offset_x, frame_offset_y) = crop(frame_orig, p=frame_proportion, offset_x=frame_offset_x, offset_y=frame_offset_y)
 
             frame = resize(frame, (IMG_SIZE, IMG_SIZE))[..., :3]
 
@@ -342,22 +381,22 @@ if __name__ == "__main__":
 
             if key == 27: # ESC
                 break
-            elif key == ord('d'):
+            elif key in [ord('d'), ord('D')]:
                 cur_ava += 1
                 if cur_ava >= len(avatars):
                     cur_ava = 0
                 passthrough = False
                 change_avatar(predictor, avatars[cur_ava])
-            elif key == ord('a'):
+            elif key in [ord('a'), ord('A')]:
                 cur_ava -= 1
                 if cur_ava < 0:
                     cur_ava = len(avatars) - 1
                 passthrough = False
                 change_avatar(predictor, avatars[cur_ava])
-            elif key == ord('w'):
+            elif key in [ord('w'), ord('W')]:
                 frame_proportion -= 0.05
                 frame_proportion = max(frame_proportion, 0.1)
-            elif key == ord('s'):
+            elif key in [ord('s'), ord('S')]:
                 frame_proportion += 0.05
                 frame_proportion = min(frame_proportion, 1.0)
             elif key == ord('H'):
@@ -380,8 +419,15 @@ if __name__ == "__main__":
                 frame_offset_x = 0
                 frame_offset_y = 0
                 frame_proportion = 0.9
-            elif key == ord('x'):
+            elif key in [ord('x'), ord('X')]:
                 predictor.reset_frames()
+                
+                # REHAUL: One-time auto-center on calibration
+                full_lmk = predictor.get_frame_landmarks(frame_orig)
+                if full_lmk is not None:
+                    face_center = full_lmk.mean(axis=0)
+                    predictor.tracker_center = [int(face_center[0]), int(face_center[1])]
+                    log(f"Locked camera center to: {predictor.tracker_center}")
 
                 if not is_calibrated:
                     cv2.namedWindow('avatarify', cv2.WINDOW_GUI_NORMAL)
@@ -409,6 +455,10 @@ if __name__ == "__main__":
                     change_avatar(predictor, avatar)
                 except:
                     log('Failed to load StyleGAN avatar')
+            elif key in [ord('m'), ord('M')]:
+                auto_track = not auto_track
+                if not auto_track and hasattr(predictor, 'tracker_center'):
+                    delattr(predictor, 'tracker_center')
             elif key == ord('l'):
                 try:
                     log('Reloading avatars...')

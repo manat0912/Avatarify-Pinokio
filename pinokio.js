@@ -1,6 +1,6 @@
 const path = require('path')
 module.exports = {
-  version: "6.0",
+  version: "7.0",
   menu: async (kernel, info) => {
     let installed = info.exists("app/env")
     let running = {
@@ -66,12 +66,33 @@ module.exports = {
           icon: "fa-solid fa-power-off",
           text: "Start Avatarify (FOMM)",
           href: "start.js",
+          params: {
+            mode: "fomm",
+            enhance: false
+          }
+        }, {
+          icon: "fa-solid fa-wand-magic-sparkles",
+          text: "Start Avatarify (FOMM) + Enhanced",
+          href: "start.js",
+          params: {
+            mode: "fomm",
+            enhance: true
+          }
         }, {
           icon: "fa-solid fa-power-off",
           text: "Start Face Animation (face-vid2vid)",
           href: "start.js",
           params: {
-            mode: "face-animation"
+            mode: "face-animation",
+            enhance: false
+          }
+        }, {
+          icon: "fa-solid fa-wand-magic-sparkles",
+          text: "Start Face Animation (face-vid2vid) + Enhanced",
+          href: "start.js",
+          params: {
+            mode: "face-animation",
+            enhance: true
           }
         }, {
           icon: "fa-solid fa-plug",

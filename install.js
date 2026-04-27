@@ -99,7 +99,7 @@ module.exports = {
         venv: "env",
         path: "app/face-animation",
         message: [
-          "uv pip install batch-face gdown imageio[ffmpeg]"
+          "uv pip install batch-face gdown imageio[ffmpeg] ninja scikit-image"
         ]
       }
     },
